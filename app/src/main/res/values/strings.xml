@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Handheld</string>
+    <string name="action_settings">Settings</string>
+
+    <!--<string name="service_url">http://dmoran.plng.pvt/ccureservices</string>-->
+    <string name="service_url">http://plngmelas35.plng.pvt/ccure</string>
+
+    <string name="credential_id">Badge Id:</string>
+    <string name="credential_hint">Tap a badge or enter Id</string>
+    <string name="button_Check_text">Check</string>
+
+    <!-- Main Gate -->
+    <string name="door_id">Main Gate</string>
+    <string name="area_id">Plant</string>
+    <string name="logEntry_id">EntryMainGate</string>
+    <string name="logExit_id">ExitMainGate</string>
+
+</resources>
