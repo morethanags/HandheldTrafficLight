@@ -76,7 +76,7 @@ public class ExitFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             mListener = (OnExitFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnJournalFragmentInteractionListener");
         }
     }
 

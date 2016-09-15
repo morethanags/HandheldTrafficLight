@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
+        mViewPager.setOffscreenPageLimit(2);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
@@ -65,6 +65,15 @@ public class MainActivity extends AppCompatActivity implements
         handleIntent(getIntent());
     }
 
+    @Override
+    public boolean onNavigateUpFromChild(Activity child) {
+        setCredentialId("");
+        return super.onNavigateUpFromChild(child);
+    }
+    private void setCredentialId(String id) {
+        ((HandheldFragment) mSectionsPagerAdapter.getItem(0))
+                .setCredentialId(id);
+    }
     @Override
     protected void onResume() {
         super.onResume();

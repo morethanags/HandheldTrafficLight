@@ -4,4 +4,10 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="buttonBackground">#0099cc</color>-->
+
+    <color name="info">#FFCC00</color>
+    <color name="check">#00CC00</color>
+    <color name="warning">#FFCC00</color>
+    <color name="error">#FF3838</color>
+
 </resources>
