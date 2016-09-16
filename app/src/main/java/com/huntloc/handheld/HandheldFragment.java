@@ -231,6 +231,7 @@ public class HandheldFragment extends Fragment {
             }
         }
     }
+
     private class QueryPersonnelTask extends AsyncTask<String, String, String> {
 
         HttpURLConnection urlConnection;

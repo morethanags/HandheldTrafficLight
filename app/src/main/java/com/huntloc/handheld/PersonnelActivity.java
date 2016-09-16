@@ -90,6 +90,7 @@ public class PersonnelActivity extends AppCompatActivity implements JournalFragm
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         private JournalFragment journalFragment;
         private ClearanceFragment clearanceFragment;
+
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -102,8 +103,7 @@ public class PersonnelActivity extends AppCompatActivity implements JournalFragm
                     journalFragment = JournalFragment.newInstance(response);
                 }
                 fragment = journalFragment;
-            }
-           else if (position == 1) {
+            } else if (position == 1) {
                 if (clearanceFragment == null) {
                     clearanceFragment = new ClearanceFragment();
                     Bundle args = new Bundle();
