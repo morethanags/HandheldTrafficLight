@@ -32,6 +32,7 @@ public class ExitFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private OnExitFragmentInteractionListener mListener;
     private SwipeRefreshLayout swipeRefreshLayout;
+
     public ExitFragment() {
         // Required empty public constructor
     }
