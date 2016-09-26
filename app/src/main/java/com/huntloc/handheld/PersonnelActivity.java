@@ -131,7 +131,7 @@ public class PersonnelActivity extends AppCompatActivity implements JournalFragm
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Journal";
+                    return "Personnel";
                 case 1:
                     return "Clearance";
 
