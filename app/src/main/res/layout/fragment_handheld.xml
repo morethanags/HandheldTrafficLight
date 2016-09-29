@@ -41,7 +41,7 @@
             android:id="@+id/button_Register"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="55dp"
             android:layout_weight=".50"
 
             android:text="@string/button_Check_text"
