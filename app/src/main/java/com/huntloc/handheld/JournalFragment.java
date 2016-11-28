@@ -232,7 +232,7 @@ public class JournalFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
-        super.onAttach(context);
+       super.onAttach(context);
         if (context instanceof OnJournalFragmentInteractionListener) {
             mListener = (OnJournalFragmentInteractionListener) context;
         } else {

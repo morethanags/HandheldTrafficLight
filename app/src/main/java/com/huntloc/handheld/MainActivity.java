@@ -117,8 +117,9 @@ public class MainActivity extends AppCompatActivity implements
 
     private void handleIntent(Intent intent) {
         String action = intent.getAction();
+        Log.d("action", intent.getAction());
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)) {
-            Parcelable[] rawMsgs = intent
+           Parcelable[] rawMsgs = intent
                     .getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
             NdefMessage[] msgs;
             if (rawMsgs != null) {
