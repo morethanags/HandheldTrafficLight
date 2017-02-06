@@ -92,7 +92,7 @@ public class JournalFragment extends Fragment {
                              Bundle savedInstanceState) {
 
 
-        View view = inflater.inflate(R.layout.fragment_journal_cel,
+        View view = inflater.inflate(R.layout.fragment_journal,
                 container, false);
         textView_Credential = (TextView) view.findViewById(R.id.textView_Credential);
         textView_Name = (TextView) view.findViewById(R.id.textView_Name);

@@ -70,54 +70,76 @@ public class MainActivity extends AppCompatActivity implements
         setCredentialId("");
         return super.onNavigateUpFromChild(child);
     }
+
     private void setCredentialId(String id) {
         ((HandheldFragment) mSectionsPagerAdapter.getItem(0))
                 .setCredentialId(id);
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        setupForegroundDispatch(this, mNfcAdapter);
-    }
 
-    @Override
-    protected void onPause() {
-        stopForegroundDispatch(this, mNfcAdapter);
-        super.onPause();
-    }
+    /* @Override
+     protected void onResume() {
+         super.onResume();
+         setupForegroundDispatch(this, mNfcAdapter);
+     }
 
-    public void setupForegroundDispatch(final Activity activity, NfcAdapter adapter) {
-        final Intent intent = new Intent(activity.getApplicationContext(),
-                activity.getClass());
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        final PendingIntent pendingIntent = PendingIntent.getActivity(
-                activity.getApplicationContext(), 0, intent, 0);
-        IntentFilter[] filters = new IntentFilter[1];
-        String[][] techList = new String[][]{};
-        filters[0] = new IntentFilter();
-        filters[0].addAction(NfcAdapter.ACTION_TAG_DISCOVERED);
-        filters[0].addCategory(Intent.CATEGORY_DEFAULT);
-        try {
-            filters[0].addDataType(MIME_TEXT_PLAIN);
-        } catch (IntentFilter.MalformedMimeTypeException e) {
-            throw new RuntimeException("Check your mime type.");
-        }
-        adapter.enableForegroundDispatch(activity, pendingIntent, filters,
-                techList);
-    }
+     @Override
+     protected void onPause() {
+         stopForegroundDispatch(this, mNfcAdapter);
+         super.onPause();
+     }
 
-    public void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
-        adapter.disableForegroundDispatch(activity);
-    }
+     public void setupForegroundDispatch(final Activity activity, NfcAdapter adapter) {
+         final Intent intent = new Intent(activity.getApplicationContext(),
+                 activity.getClass());
+         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+         final PendingIntent pendingIntent = PendingIntent.getActivity(
+                 activity.getApplicationContext(), 0, intent, 0);
+         IntentFilter[] filters = new IntentFilter[1];
+         String[][] techList = new String[][]{};
+         filters[0] = new IntentFilter();
+         filters[0].addAction(NfcAdapter.ACTION_TAG_DISCOVERED);
+         filters[0].addCategory(Intent.CATEGORY_DEFAULT);
+         try {
+             filters[0].addDataType(MIME_TEXT_PLAIN);
+         } catch (IntentFilter.MalformedMimeTypeException e) {
+             throw new RuntimeException("Check your mime type.");
+         }
+         adapter.enableForegroundDispatch(activity, pendingIntent, filters,
+                 techList);
+     }
 
+     public void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
+         adapter.disableForegroundDispatch(activity);
+     }
+ */
     @Override
     protected void onNewIntent(Intent intent) {
         handleIntent(intent);
     }
 
     private void handleIntent(Intent intent) {
+        /*try {
+            if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
+                NdefMessage ndefMessage = null;
+                Parcelable[] rawMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+                if ((rawMessages != null) && (rawMessages.length > 0)) {
+                    ndefMessage = (NdefMessage) rawMessages[0];
+                    String result = "";
+                    byte[] payload = ndefMessage.getRecords()[0].getPayload();
+                    String textEncoding = ((payload[0] & 0200) == 0) ? "UTF-8" : "UTF-16";
+                    int languageCodeLength = payload[0] & 0077;
+                    //String languageCode = new String(payload, 1, languageCodeLength, "US-ASCII");
+                    String text = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
+                    Log.d("Internal Code", text);
+                    HandheldFragment handheldFragment = ((HandheldFragment) mSectionsPagerAdapter.getItem(0));
+                    if (handheldFragment != null) {
+                        handheldFragment.setCredentialId(text);
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }*/
         String action = intent.getAction();
-        Log.d("action", intent.getAction());
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)) {
            Parcelable[] rawMsgs = intent
                     .getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
@@ -202,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements
         private HandheldFragment handheldFragment;
         private EntranceFragment entranceFragment;
         private ExitFragment exitFragment;
+
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -214,14 +237,12 @@ public class MainActivity extends AppCompatActivity implements
                     handheldFragment = new HandheldFragment();
                 }
                 fragment = handheldFragment;
-            }
-            else if (position == 1) {
+            } else if (position == 1) {
                 if (entranceFragment == null) {
                     entranceFragment = new EntranceFragment();
                 }
                 fragment = entranceFragment;
-            }
-            else if (position == 2) {
+            } else if (position == 2) {
                 if (exitFragment == null) {
                     exitFragment = new ExitFragment();
                 }
