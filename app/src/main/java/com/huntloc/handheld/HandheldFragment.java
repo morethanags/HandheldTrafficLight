@@ -113,7 +113,6 @@ public class HandheldFragment extends Fragment {
     }
     public void setCredentialId(String id) {
         mCredentialId.setText(id);
-        //if (!mCredentialId.getText().toString().isEmpty()) {
         if (!id.isEmpty()) {
             String serverURL = getResources().getString(
                     R.string.service_url)

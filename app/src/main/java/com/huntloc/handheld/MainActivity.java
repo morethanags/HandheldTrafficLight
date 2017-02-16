@@ -7,6 +7,9 @@ import android.content.IntentFilter;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.nfc.tech.MifareClassic;
+import android.nfc.tech.NdefFormatable;
+import android.nfc.tech.NfcA;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
@@ -76,50 +79,69 @@ public class MainActivity extends AppCompatActivity implements
                 .setCredentialId(id);
     }
 
-    /* @Override
-     protected void onResume() {
-         super.onResume();
-         setupForegroundDispatch(this, mNfcAdapter);
-     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupForegroundDispatch(this, mNfcAdapter);
+    }
 
-     @Override
-     protected void onPause() {
-         stopForegroundDispatch(this, mNfcAdapter);
-         super.onPause();
-     }
+    @Override
+    protected void onPause() {
+        stopForegroundDispatch(this, mNfcAdapter);
+        super.onPause();
+    }
 
-     public void setupForegroundDispatch(final Activity activity, NfcAdapter adapter) {
-         final Intent intent = new Intent(activity.getApplicationContext(),
-                 activity.getClass());
-         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-         final PendingIntent pendingIntent = PendingIntent.getActivity(
-                 activity.getApplicationContext(), 0, intent, 0);
-         IntentFilter[] filters = new IntentFilter[1];
-         String[][] techList = new String[][]{};
-         filters[0] = new IntentFilter();
-         filters[0].addAction(NfcAdapter.ACTION_TAG_DISCOVERED);
-         filters[0].addCategory(Intent.CATEGORY_DEFAULT);
+    public void setupForegroundDispatch(final Activity activity, NfcAdapter adapter) {
+        final Intent intent = new Intent(activity.getApplicationContext(),
+                activity.getClass());
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        final PendingIntent pendingIntent = PendingIntent.getActivity(
+                activity.getApplicationContext(), 0, intent, 0);
+        IntentFilter[] filters = new IntentFilter[1];
+        String[][] techList = new String[][]{};
+        filters[0] = new IntentFilter();
+        filters[0].addCategory(Intent.CATEGORY_DEFAULT);
+
+         /*filters[0].addAction(NfcAdapter.ACTION_TECH_DISCOVERED);
+         String[][] techList = new String[][]{new String[]{NfcA.class.getName()}, new String[]{MifareClassic.class.getName()}, new String[]{NdefFormatable.class.getName()}};*/
+
+         /*filters[0].addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
          try {
              filters[0].addDataType(MIME_TEXT_PLAIN);
          } catch (IntentFilter.MalformedMimeTypeException e) {
              throw new RuntimeException("Check your mime type.");
-         }
-         adapter.enableForegroundDispatch(activity, pendingIntent, filters,
-                 techList);
-     }
+         }*/
 
-     public void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
-         adapter.disableForegroundDispatch(activity);
-     }
- */
+        filters[0].addAction(NfcAdapter.ACTION_TAG_DISCOVERED);
+        adapter.enableForegroundDispatch(activity, pendingIntent, filters,
+                techList);
+    }
+
+    public void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
+        adapter.disableForegroundDispatch(activity);
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         handleIntent(intent);
     }
 
     private void handleIntent(Intent intent) {
-        /*try {
-            if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
+        String action = intent.getAction();
+        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)) {
+
+            Parcelable parcelable = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            Tag tag = (Tag) parcelable;
+            byte[] id = tag.getId();
+            String code = getDec(id) + "";
+            Log.d("Internal Code", code);
+            HandheldFragment handheldFragment = ((HandheldFragment) mSectionsPagerAdapter.getItem(0));
+            if (handheldFragment != null) {
+                handheldFragment.setCredentialId(code);
+            }
+        }
+
+           /* if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
                 NdefMessage ndefMessage = null;
                 Parcelable[] rawMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
                 if ((rawMessages != null) && (rawMessages.length > 0)) {
@@ -136,31 +158,19 @@ public class MainActivity extends AppCompatActivity implements
                         handheldFragment.setCredentialId(text);
                     }
                 }
+            }*/
+
+        /*if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
+            Parcelable parcelable = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            Tag tag = (Tag) parcelable;
+            byte[] id = tag.getId();
+            String code = getDec(id) + "";
+            Log.d("Internal Code", code);
+            HandheldFragment handheldFragment = ((HandheldFragment) mSectionsPagerAdapter.getItem(0));
+            if (handheldFragment != null) {
+                handheldFragment.setCredentialId(code);
             }
-        } catch (Exception e) {
         }*/
-        String action = intent.getAction();
-        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)) {
-           Parcelable[] rawMsgs = intent
-                    .getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-            NdefMessage[] msgs;
-            if (rawMsgs != null) {
-                msgs = new NdefMessage[rawMsgs.length];
-                for (int i = 0; i < rawMsgs.length; i++) {
-                    msgs[i] = (NdefMessage) rawMsgs[i];
-                }
-            } else {
-                Parcelable parcelable = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-                Tag tag = (Tag) parcelable;
-                byte[] id = tag.getId();
-                String code = getDec(id) + "";
-                Log.d("Internal Code", code);
-                HandheldFragment handheldFragment = ((HandheldFragment) mSectionsPagerAdapter.getItem(0));
-                if (handheldFragment != null) {
-                    handheldFragment.setCredentialId(code);
-                }
-            }
-        }
     }
 
     private long getDec(byte[] bytes) {
