@@ -102,19 +102,19 @@ public class MainActivity extends AppCompatActivity implements
         filters[0] = new IntentFilter();
         filters[0].addCategory(Intent.CATEGORY_DEFAULT);
 
-         /*filters[0].addAction(NfcAdapter.ACTION_TECH_DISCOVERED);
-         String[][] techList = new String[][]{new String[]{NfcA.class.getName()}, new String[]{MifareClassic.class.getName()}, new String[]{NdefFormatable.class.getName()}};*/
+        filters[0].addAction(NfcAdapter.ACTION_TAG_DISCOVERED);
 
-         /*filters[0].addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
+        /*filters[0].addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
          try {
              filters[0].addDataType(MIME_TEXT_PLAIN);
          } catch (IntentFilter.MalformedMimeTypeException e) {
              throw new RuntimeException("Check your mime type.");
          }*/
 
-        filters[0].addAction(NfcAdapter.ACTION_TAG_DISCOVERED);
-        adapter.enableForegroundDispatch(activity, pendingIntent, filters,
-                techList);
+       /* filters[0].addAction(NfcAdapter.ACTION_TECH_DISCOVERED);
+        techList = new String[][]{new String[]{NfcA.class.getName()}, new String[]{MifareClassic.class.getName()}, new String[]{NdefFormatable.class.getName()}};*/
+
+        adapter.enableForegroundDispatch(activity, pendingIntent, filters,  techList);
     }
 
     public void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
@@ -127,9 +127,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void handleIntent(Intent intent) {
-        String action = intent.getAction();
-        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)) {
 
+        String action = intent.getAction();
+        Log.d("action", action);
+        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)) {
             Parcelable parcelable = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             Tag tag = (Tag) parcelable;
             byte[] id = tag.getId();
@@ -141,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
 
-           /* if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
+         /*   if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
                 NdefMessage ndefMessage = null;
                 Parcelable[] rawMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
                 if ((rawMessages != null) && (rawMessages.length > 0)) {
@@ -160,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }*/
 
-        /*if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
+       /* if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
             Parcelable parcelable = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             Tag tag = (Tag) parcelable;
             byte[] id = tag.getId();
