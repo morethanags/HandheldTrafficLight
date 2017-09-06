@@ -25,24 +25,31 @@
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-             <intent-filter>
-                 <action android:name="android.nfc.action.TAG_DISCOVERED" />
-                 <category android:name="android.intent.category.DEFAULT" />
-             </intent-filter>
-            <!-- <intent-filter>
-                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-                 <category android:name="android.intent.category.DEFAULT" />
-                 <data android:mimeType="text/plain" />
-             </intent-filter>-->
+            <!--
+              <intent-filter>
+                  <action android:name="android.nfc.action.TAG_DISCOVERED" />
+                  <category android:name="android.intent.category.DEFAULT" />
+              </intent-filter>
+            -->
+            <!--
+              <intent-filter>
+                  <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                  <category android:name="android.intent.category.DEFAULT" />
+                  <data android:mimeType="text/plain" />
+              </intent-filter>
+            -->
+            <intent-filter>
+                <action android:name="android.nfc.action.TECH_DISCOVERED" />
 
-            <!-- <intent-filter>
-                <action android:name="android.nfc.action.TECH_DISCOVERED"/>
                 <category android:name="android.intent.category.DEFAULT" />
-                <meta-data android:name="android.nfc.action.TECH_DISCOVERED"
+
+                <meta-data
+                    android:name="android.nfc.action.TECH_DISCOVERED"
                     android:resource="@xml/nfc_tech_filter" />
-            </intent-filter>-->
+            </intent-filter>
         </activity>
         <activity
             android:name=".PersonnelActivity"
@@ -54,7 +61,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.huntloc.handheld.MainActivity" />
         </activity>
-
     </application>
 
 </manifest>

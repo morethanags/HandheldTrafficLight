@@ -91,7 +91,6 @@ public class JournalFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
         View view = inflater.inflate(R.layout.fragment_journal,
                 container, false);
         textView_Credential = (TextView) view.findViewById(R.id.textView_Credential);
