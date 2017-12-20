@@ -11,8 +11,8 @@
     <string name="area_id">Plant</string>
     <string name="logEntry_id">EntryMainGate</string>
     <string name="logExit_id">ExitMainGate</string>
-    <string name="title_activity_personnel">Handheld</string>
 
+    <string name="title_activity_personnel">Handheld</string>
     <string name="content_description">Portrait</string>
     <string name="button_Entrance_text">Entrada</string>
     <string name="button_Exit_text">Salida</string>
