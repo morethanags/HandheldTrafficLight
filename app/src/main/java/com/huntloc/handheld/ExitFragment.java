@@ -60,10 +60,11 @@ public class ExitFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         return view;
     }
     private void updateExits() {
+        String log = ExitFragment.this.getActivity().getSharedPreferences(MainActivity.PREFS_NAME, 0).getString("logExit_id", "ExitMainGate");
+
         String serverURL = getResources().getString(R.string.service_url)
-                + "/JournalLogService/"
-                + getResources().getString(R.string.logExit_id) + "/"
-                + UUID.randomUUID().toString();
+                + "/Journal/GetJournalLog/"
+                + log;
         Log.d("URL Exit", serverURL);
         ExitOperationTask exitOperationTask = new ExitOperationTask(this);
 

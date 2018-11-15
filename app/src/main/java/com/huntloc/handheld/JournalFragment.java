@@ -33,10 +33,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-
 public class JournalFragment extends Fragment {
 
     public static final String ARG_RESPONSE = "response";
+    public static final String PREFS_NAME = "HandheldPrefsFile";
+
     TextView textView_Credential, textView_Name;
     TextView textView_DriverLicenseDate, textView_DriverLicenseType, textView_DefenseDrivingDate;
     ImageView portrait;
@@ -117,12 +118,13 @@ public class JournalFragment extends Fragment {
         buttonEntrance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String log = JournalFragment.this.getActivity().getSharedPreferences(MainActivity.PREFS_NAME, 0).getString("logEntry_id", "EntryMainGate");
                 String serverURL = getResources().getString(
                         R.string.service_url)
-                        + "/JournalLogService/"
+                        + "/Journal/PostLog/"
                         + credentialId
                         + "/"
-                        + getResources().getString(R.string.logEntry_id);
+                        + log;
                 Log.d("buttonEntrance", serverURL);
                 journalOperation.execute(serverURL);
             }
@@ -131,12 +133,13 @@ public class JournalFragment extends Fragment {
         buttonExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String log = JournalFragment.this.getActivity().getSharedPreferences(MainActivity.PREFS_NAME, 0).getString("logExit_id", "ExitMainGate");
                 String serverURL = getResources().getString(
                         R.string.service_url)
-                        + "/JournalLogService/"
+                        + "/Journal/PostLog/"
                         + credentialId
                         + "/"
-                        + getResources().getString(R.string.logExit_id);
+                        + log;
                 Log.d("buttonExit", serverURL);
                 journalOperation.execute(serverURL);
             }
@@ -230,7 +233,6 @@ public class JournalFragment extends Fragment {
         return view;
     }
 
-
     @Override
     public void onAttach(Context context) {
        super.onAttach(context);
@@ -247,7 +249,6 @@ public class JournalFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
 
     public interface OnJournalFragmentInteractionListener {
         void onJournalFragmentInteraction();

@@ -57,8 +57,7 @@ public class ClearanceFragment extends Fragment {
 
         String credentialId = getArguments().getString(ARG_CREDENTIALID);
         String serverURL = getResources().getString(R.string.service_url)
-                + "/ClearanceService/" + credentialId + "/"
-                + UUID.randomUUID().toString();
+                + "/Access/GetClearance/" + credentialId;
         Log.d("Clearance URL", serverURL);
         ClearanceOperation clearanceOperation = new ClearanceOperation(this);
         this.clearanceOperationWeakReference = new WeakReference<ClearanceOperation>(

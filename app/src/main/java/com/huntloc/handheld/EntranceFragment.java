@@ -59,11 +59,11 @@ public class EntranceFragment extends Fragment implements SwipeRefreshLayout.OnR
     }
 
     private void updateEntrances() {
+        String log = EntranceFragment.this.getActivity().getSharedPreferences(MainActivity.PREFS_NAME, 0).getString("logEntry_id", "EntryMainGate");
 
         String serverURL = getResources().getString(R.string.service_url)
-                + "/JournalLogService/"
-                + getResources().getString(R.string.logEntry_id) + "/"
-                + UUID.randomUUID().toString();
+                + "/Journal/GetJournalLog/"
+                + log;
         Log.d("URL Entrance", serverURL);
         EntranceOperationTask entranceOperationTask = new EntranceOperationTask(
                 this);

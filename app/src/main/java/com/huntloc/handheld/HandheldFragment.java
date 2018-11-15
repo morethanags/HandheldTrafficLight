@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -88,6 +89,11 @@ public class HandheldFragment extends Fragment {
                 }
             }
         });
+
+        ((TextView) view.findViewById(R.id.textView_DoorId))
+                .setText(HandheldFragment.this.getActivity().getSharedPreferences(MainActivity.PREFS_NAME, 0).getString(
+                        "door_id", "Main Gate"));
+
         return view;
     }
 
@@ -116,12 +122,9 @@ public class HandheldFragment extends Fragment {
         if (!id.isEmpty()) {
             String serverURL = getResources().getString(
                     R.string.service_url)
-                    + "/SwapBadge/"
-                    + id
-                    + "/"
-                    + UUID.randomUUID().toString();
+                    + "/Access/GetBadge/"
+                    + id;
             new QueryBadgeTask(this).execute(serverURL);
-            Log.d("URL Badge", serverURL);
         }
     }
     public void clearCredentialId() {
@@ -130,18 +133,19 @@ public class HandheldFragment extends Fragment {
         }
     }
     private void sendRequest() {
+        String area = HandheldFragment.this.getActivity().getSharedPreferences(MainActivity.PREFS_NAME, 0).getString("area_id", "Plant");
         String serverURL = getResources().getString(R.string.service_url)
-                + "/PersonnelService/" + mCredentialId.getText().toString()
-                + "/" + getResources().getString(R.string.area_id) + "/"
-                + UUID.randomUUID().toString();
+                + "/Access/GetPersonnel/" + mCredentialId.getText().toString()
+                + "/" + area;
         Log.d("URL Personnel", serverURL);
         new QueryPersonnelTask(this).execute(serverURL);
     }
+
     private void sendRequest(String credentialId) {
+        String area = HandheldFragment.this.getActivity().getSharedPreferences(MainActivity.PREFS_NAME, 0).getString("area_id", "Plant");
         String serverURL = getResources().getString(R.string.service_url)
-                + "/PersonnelService/" + credentialId + "/"
-                + getResources().getString(R.string.area_id) + "/"
-                + UUID.randomUUID().toString();
+                + "/Access/GetPersonnel/" + credentialId + "/"
+                + area;
         Log.d("URL Personnel", serverURL);
         new QueryPersonnelTask(this).execute(serverURL);
     }
@@ -195,7 +199,8 @@ public class HandheldFragment extends Fragment {
                 if (!result.equals("")) {
                     JSONObject jsonResponse = new JSONObject(result);
                     printedCode = jsonResponse.optString("PrintedCode");
-                    if (printedCode.equals("null")) {
+                    Log.d("Printed Code",printedCode);
+                   if (printedCode.equals("null")) {
                         handheldFragmentWeakReference.get().getActivity()
                                 .runOnUiThread(new Runnable() {
                                     public void run() {
@@ -219,7 +224,7 @@ public class HandheldFragment extends Fragment {
                                         EditText outputText = (EditText) handheldFragmentWeakReference.get()
                                                 .getView().findViewById(R.id.editText_CredentialId);
                                         outputText.setText(printedCode);
-                                        Log.d("Printed Code",printedCode);
+                                        Log.d("Temp Printed Code",printedCode);
                                         sendRequest(printedCode);
                                     }
                                 });
@@ -302,6 +307,7 @@ public class HandheldFragment extends Fragment {
                 if (!result.equals("")) {
                     this.result = result;
                     JSONObject jsonResponse = new JSONObject(result);
+                    Log.d("result",result);
                     if(jsonResponse.isNull("CardID")) {
                         ready = false;
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(handheldFragmentWeakReference.get().getActivity());
@@ -343,8 +349,8 @@ public class HandheldFragment extends Fragment {
                             alertDialogBuilder.create().show();
                         }
                         else {
-                            if (!jsonResponse.isNull("CAMODate")) {
-                                Date CAMODate = parseString(jsonResponse.optString("CAMODate"));
+                            if (!jsonResponse.isNull("CAMOExpirationDate")) {
+                                Date CAMODate = parseString(jsonResponse.optString("CAMOExpirationDate"));
 
                                 Calendar calendar = Calendar.getInstance();
                                 calendar.setTime(CAMODate);

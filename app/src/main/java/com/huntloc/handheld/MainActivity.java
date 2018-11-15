@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -18,10 +19,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private NfcAdapter mNfcAdapter;
+    public static final String PREFS_NAME = "HandheldPrefsFile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,33 @@ public class MainActivity extends AppCompatActivity implements
                     .show();
         }
         handleIntent(getIntent());
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+
+        /**Puertas por defecto*/
+        if (!settings.contains("door_id")) {
+            editor.putString("door_id", "Sliding Gate");
+        }
+        if (!settings.contains("area_id")) {
+            editor.putString("area_id", "Process");
+        }
+        if (!settings.contains("logEntry_id")) {
+            editor.putString("logEntry_id", "EntrySlidingGate");
+        }
+        if (!settings.contains("logExit_id")) {
+            editor.putString("logExit_id", "ExitSlidingGate");
+        }
+        /***/
+
+        if (!settings.contains("descLogEntry_id")) {
+            editor.putString("descLogEntry_id", "Entrance");
+        }
+        if (!settings.contains("descLogExit_id")) {
+            editor.putString("descLogExit_id", "Exit");
+        }
+        editor.commit();
+
+
     }
 
     @Override
@@ -126,21 +157,18 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void handleIntent(Intent intent) {
-
         String action = intent.getAction();
-        Log.d("action", action);
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)) {
             Parcelable parcelable = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             Tag tag = (Tag) parcelable;
             byte[] id = tag.getId();
             String code = getDec(id) + "";
-            Log.d("Internal Code", code);
+
             HandheldFragment handheldFragment = ((HandheldFragment) mSectionsPagerAdapter.getItem(0));
             if (handheldFragment != null) {
                 handheldFragment.setCredentialId(code);
             }
         }
-
         /*if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
                             NdefMessage ndefMessage = null;
                 Parcelable[] rawMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
@@ -187,20 +215,64 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+
+		/*
+		 * case R.id.action_list: listRecords(); return true;
+		 */
+
+            case R.id.door_sliding:
+                editor.putString("door_id", "Sliding Gate");
+                editor.putString("area_id", "Process");
+                editor.putString("logEntry_id", "EntrySlidingGate");
+                editor.putString("logExit_id", "ExitSlidingGate");
+                editor.commit();
+                break;
+            case R.id.door_north:
+                editor.putString("door_id", "North Entrance");
+                editor.putString("area_id", "Process");
+                editor.putString("logEntry_id", "EntryNorthEntrance");
+                editor.putString("logExit_id", "ExitNorthEntrance");
+                editor.commit();
+                break;
+            case R.id.door_south:
+                editor.putString("door_id", "South Entrance");
+                editor.putString("area_id", "Process");
+                editor.putString("logEntry_id", "EntrySouthEntrance");
+                editor.putString("logExit_id", "ExitSouthEntrance");
+                editor.commit();
+                break;
+            case R.id.door_main:
+                editor.putString("door_id", "Main Gate");
+                editor.putString("area_id", "Plant");
+                editor.putString("logEntry_id", "EntryMainGate");
+                editor.putString("logExit_id", "ExitMainGate");
+                editor.commit();
+                break;
+            /*case R.id.door_temp:
+                editor.putString("door_id", "Door 1");
+                editor.putString("area_id", "Temp");
+                editor.putString("logEntry_id", "EntryTemp");
+                editor.putString("logExit_id", "ExitTemp");
+                editor.commit();
+                break;*/
+            default:
+                break;
+        }
+        try {
+            ((TextView) findViewById(R.id.textView_DoorId))
+                    .setText(getSharedPreferences(PREFS_NAME, 0).getString(
+                            "door_id", "Main Gate"));
+        } catch (Exception e) {
         }
         return super.onOptionsItemSelected(item);
     }

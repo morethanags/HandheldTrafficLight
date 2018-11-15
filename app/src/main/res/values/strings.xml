@@ -1,16 +1,13 @@
 <resources>
-    <string name="app_name">Handheld</string>
+    <string name="app_name">Handheld V2</string>
     <string name="action_settings">Settings</string>
 
     <string name="credential_id">Badge Id:</string>
     <string name="credential_hint">Tap a badge or enter Id</string>
     <string name="button_Check_text">Check</string>
 
-    <!-- Main Gate -->
-    <string name="door_id">Main Gate</string>
-    <string name="area_id">Plant</string>
-    <string name="logEntry_id">EntryMainGate</string>
-    <string name="logExit_id">ExitMainGate</string>
+    <string name="door_menu_title">Cambiar Puerta</string>
+
 
     <string name="title_activity_personnel">Handheld</string>
     <string name="content_description">Portrait</string>

@@ -3,8 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.huntloc.handheld.MainActivity">
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:id="@+id/action_door"
+        android:title="@string/door_menu_title"
+        android:orderInCategory="4">
+        <menu>
+            <group
+                android:id="@+id/door_settings"
+                android:checkableBehavior="single" >
+                <item
+                    android:id="@+id/door_sliding"
+                    android:title="Sliding Gate"/>
+                <item
+                    android:id="@+id/door_north"
+                    android:title="North Entrance"/>
+                <item
+                    android:id="@+id/door_south"
+                    android:title="South Entrance"/>
+                <item
+                    android:id="@+id/door_main"
+                    android:title="Main Gate"/>
+               <!-- <item
+                    android:id="@+id/door_temp"
+                    android:title="Door 1"/>-->
+            </group>
+        </menu>
+    </item>
 </menu>
