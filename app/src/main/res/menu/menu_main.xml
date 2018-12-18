@@ -12,16 +12,16 @@
                 android:checkableBehavior="single" >
                 <item
                     android:id="@+id/door_sliding"
-                    android:title="Sliding Gate"/>
+                    android:title="Sliding Gate" />
                 <item
                     android:id="@+id/door_north"
-                    android:title="North Entrance"/>
+                    android:title="North Entrance" />
                 <item
                     android:id="@+id/door_south"
                     android:title="South Entrance"/>
                 <item
                     android:id="@+id/door_main"
-                    android:title="Main Gate"/>
+                    android:title="Main Gate" />
                <!-- <item
                     android:id="@+id/door_temp"
                     android:title="Door 1"/>-->
