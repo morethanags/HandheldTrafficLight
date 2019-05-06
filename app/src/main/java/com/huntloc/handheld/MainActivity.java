@@ -258,6 +258,13 @@ public class MainActivity extends AppCompatActivity implements
                 editor.putString("logExit_id", "ExitMainGate");
                 editor.commit();
                 break;
+            case R.id.door_tlf:
+                editor.putString("door_id", "TLF");
+                editor.putString("area_id", "Tlf");
+                editor.putString("logEntry_id", "EntryTlf");
+                editor.putString("logExit_id", "ExitTlf");
+                editor.commit();
+                break;
             /*case R.id.door_temp:
                 editor.putString("door_id", "Door 1");
                 editor.putString("area_id", "Temp");
