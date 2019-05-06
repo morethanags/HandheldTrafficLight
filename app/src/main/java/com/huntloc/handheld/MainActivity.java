@@ -12,6 +12,7 @@ import android.nfc.tech.MifareClassic;
 import android.nfc.tech.NdefFormatable;
 import android.nfc.tech.NfcA;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -162,12 +163,18 @@ public class MainActivity extends AppCompatActivity implements
             Parcelable parcelable = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             Tag tag = (Tag) parcelable;
             byte[] id = tag.getId();
-            String code = getDec(id) + "";
+            final String code = getDec(id) + "";
 
-            HandheldFragment handheldFragment = ((HandheldFragment) mSectionsPagerAdapter.getItem(0));
-            if (handheldFragment != null) {
-                handheldFragment.setCredentialId(code);
-            }
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    HandheldFragment handheldFragment = ((HandheldFragment) mSectionsPagerAdapter.getItem(0));
+                    if (handheldFragment != null) {
+                        handheldFragment.setCredentialId(code);
+                    }
+                }
+            }, 1000);
         }
         /*if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
                             NdefMessage ndefMessage = null;
