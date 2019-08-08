@@ -8,7 +8,7 @@
 
     <string name="door_menu_title">Cambiar Puerta</string>
 
-
+    <string name="traffic_light_title">Configurar Semaforo</string>
     <string name="title_activity_personnel">Handheld</string>
     <string name="content_description">Portrait</string>
     <string name="button_Entrance_text">Entrada</string>
@@ -19,4 +19,6 @@
     <string name="title_activity_main2">Main2Activity</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_groups">GroupsActivity</string>
+    <string name="service_url">http://wsprd.perulng.com/ccure9000/rest</string>
+    <!--<string name="service_url">http://plngmelas42.plng.pvt/ccure9000/rest</string>-->
 </resources>

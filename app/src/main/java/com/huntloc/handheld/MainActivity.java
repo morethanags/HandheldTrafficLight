@@ -12,6 +12,7 @@ import android.nfc.tech.MifareClassic;
 import android.nfc.tech.NdefFormatable;
 import android.nfc.tech.NfcA;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
@@ -25,6 +26,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,11 +36,12 @@ public class MainActivity extends AppCompatActivity implements
         ExitFragment.OnExitFragmentInteractionListener {
     public static final String MIME_TEXT_PLAIN = "text/plain";
     public static final String EXTRA_MESSAGE = "com.huntloc.handheld.MESSAGE";
+    public static final String PREFS_NAME = "HandheldPrefsFile";
     private static long back_pressed;
+
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private NfcAdapter mNfcAdapter;
-    public static final String PREFS_NAME = "HandheldPrefsFile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,18 +78,23 @@ public class MainActivity extends AppCompatActivity implements
 
         /**Puertas por defecto*/
         if (!settings.contains("door_id")) {
-            editor.putString("door_id", "Sliding Gate");
+            editor.putString("door_id", "Main Gate");
         }
         if (!settings.contains("area_id")) {
-            editor.putString("area_id", "Process");
+            editor.putString("area_id", "Plant");
         }
         if (!settings.contains("logEntry_id")) {
-            editor.putString("logEntry_id", "EntrySlidingGate");
+            editor.putString("logEntry_id", "EntryMainGate");
         }
         if (!settings.contains("logExit_id")) {
-            editor.putString("logExit_id", "ExitSlidingGate");
+            editor.putString("logExit_id", "ExitMainGate");
         }
-        /***/
+
+
+        /**((MenuItem)findViewById(R.id.trafficlight)).setVisible(true);
+         if (!settings.contains("trafficlight_probability")) {
+         editor.putString("trafficlight_probability", "Bajo");
+         }*/
 
         if (!settings.contains("descLogEntry_id")) {
             editor.putString("descLogEntry_id", "Entrance");
@@ -94,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements
         if (!settings.contains("descLogExit_id")) {
             editor.putString("descLogExit_id", "Exit");
         }
+
         editor.commit();
 
 
@@ -219,10 +228,25 @@ public class MainActivity extends AppCompatActivity implements
         return result;
     }
 
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        MenuItem trafficlight = menu.findItem(R.id.trafficlight);
+        if(getSharedPreferences(PREFS_NAME, 0).getString("door_id", "Main Gate").equals("Main Gate"))
+        {
+            trafficlight.setVisible(true);
+        }
+        else
+        {
+            trafficlight.setVisible(false);
+        }
+        return true;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
         return true;
     }
 
@@ -230,18 +254,20 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
+        JournalFragment fragment = ((JournalFragment) mSectionsPagerAdapter.getItem(0));
 
         switch (item.getItemId()) {
 
-		/*
-		 * case R.id.action_list: listRecords(); return true;
-		 */
+            /*
+             * case R.id.action_list: listRecords(); return true;
+             */
 
             case R.id.door_sliding:
                 editor.putString("door_id", "Sliding Gate");
                 editor.putString("area_id", "Process");
                 editor.putString("logEntry_id", "EntrySlidingGate");
                 editor.putString("logExit_id", "ExitSlidingGate");
+
                 editor.commit();
                 break;
             case R.id.door_north:
@@ -272,6 +298,21 @@ public class MainActivity extends AppCompatActivity implements
                 editor.putString("logExit_id", "ExitTlf");
                 editor.commit();
                 break;
+            case R.id.trafficlight_low:
+                editor.putString("trafficlight_probability", "Baja");
+                editor.commit();
+
+                break;
+            case R.id.trafficlight_medium:
+                editor.putString("trafficlight_probability", "Media");
+                editor.commit();
+
+                break;
+            case R.id.trafficlight_high:
+                editor.putString("trafficlight_probability", "Alta");
+                editor.commit();
+
+                break;
             /*case R.id.door_temp:
                 editor.putString("door_id", "Door 1");
                 editor.putString("area_id", "Temp");
@@ -286,6 +327,18 @@ public class MainActivity extends AppCompatActivity implements
             ((TextView) findViewById(R.id.textView_DoorId))
                     .setText(getSharedPreferences(PREFS_NAME, 0).getString(
                             "door_id", "Main Gate"));
+
+            if(getSharedPreferences(PREFS_NAME, 0).getString("door_id", "Main Gate").equals("Main Gate"))
+            {
+                findViewById(R.id.textView_TrafficLight).setVisibility(View.VISIBLE);
+                ((TextView) findViewById(R.id.textView_TrafficLight))
+                        .setText("Selección "+ getSharedPreferences(PREFS_NAME, 0).getString(
+                                "trafficlight_probability", "Baja"));
+            }
+            else
+            {
+                 findViewById(R.id.textView_TrafficLight).setVisibility(View.GONE);
+            }
         } catch (Exception e) {
         }
         return super.onOptionsItemSelected(item);

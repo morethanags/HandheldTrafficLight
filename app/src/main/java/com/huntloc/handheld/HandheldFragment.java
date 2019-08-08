@@ -93,6 +93,9 @@ public class HandheldFragment extends Fragment {
         ((TextView) view.findViewById(R.id.textView_DoorId))
                 .setText(HandheldFragment.this.getActivity().getSharedPreferences(MainActivity.PREFS_NAME, 0).getString(
                         "door_id", "Main Gate"));
+        ((TextView) view.findViewById(R.id.textView_TrafficLight))
+                .setText("Seleccion "+HandheldFragment.this.getActivity().getSharedPreferences(MainActivity.PREFS_NAME, 0).getString(
+                        "trafficlight_probability", "Baja"));
 
         return view;
     }

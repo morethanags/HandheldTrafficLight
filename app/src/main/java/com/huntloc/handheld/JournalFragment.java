@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +45,8 @@ public class JournalFragment extends Fragment {
     ImageView imageView_DriverLicenseDate, imageView_DriverLicenseType, imageView_DefenseDrivingDate;
     String credentialId;
     Button buttonEntrance, buttonExit;
+    LinearLayout bandTrafficLightColor;
+    TextView textView_TrafficLight_Color;
     private String response;
     private WeakReference<JournalOperation> journalOperationWeakReference;
     private OnJournalFragmentInteractionListener mListener;
@@ -226,6 +229,34 @@ public class JournalFragment extends Fragment {
             bitmap = BitmapFactory.decodeByteArray(byteArray, 0,
                     byteArray.length);
             portrait.setImageBitmap(bitmap);
+            bandTrafficLightColor = (LinearLayout) view.findViewById(R.id.bandTrafficLightColor);
+            textView_TrafficLight_Color = (TextView)view.findViewById(R.id.textView_TrafficLight_Color);
+
+            //bandTrafficLightColor.setBackgroundColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.error));
+
+            String probability = JournalFragment.this.getActivity().getSharedPreferences(MainActivity.PREFS_NAME, 0).getString(
+                    "trafficlight_probability", "Baja");
+            String door = JournalFragment.this.getActivity().getSharedPreferences(PREFS_NAME, 0).getString("door_id", "Main Gate");
+
+            int numero = (int) (Math.random() * 10) + 1;
+            Log.d("Trafficlighty", probability+" "+numero);
+
+            if(door.equals("Main Gate")){
+                if((probability.equals("Baja") && numero <= 2) || (probability.equals("Media") && numero <= 5) || (probability.equals("Alta") && numero <= 8)){
+                    textView_TrafficLight_Color.setText("CANAL ROJO");
+                    bandTrafficLightColor.setBackgroundColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.error));
+                }
+                else {
+                    textView_TrafficLight_Color.setText("CANAL VERDE");
+                    bandTrafficLightColor.setBackgroundColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.check));
+                }
+                textView_TrafficLight_Color.setVisibility(View.VISIBLE);
+                bandTrafficLightColor.setVisibility(View.VISIBLE);
+            }else{
+                textView_TrafficLight_Color.setVisibility(View.GONE);
+                        bandTrafficLightColor.setVisibility(View.GONE);
+            }
+
 
         } catch (Exception ex) {
         }
