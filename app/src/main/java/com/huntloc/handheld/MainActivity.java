@@ -298,6 +298,11 @@ public class MainActivity extends AppCompatActivity implements
                 editor.putString("logExit_id", "ExitTlf");
                 editor.commit();
                 break;
+            case R.id.trafficlight_none:
+                editor.putString("trafficlight_probability", "");
+                editor.commit();
+
+                break;
             case R.id.trafficlight_low:
                 editor.putString("trafficlight_probability", "Baja");
                 editor.commit();
@@ -328,7 +333,7 @@ public class MainActivity extends AppCompatActivity implements
                     .setText(getSharedPreferences(PREFS_NAME, 0).getString(
                             "door_id", "Main Gate"));
 
-            if(getSharedPreferences(PREFS_NAME, 0).getString("door_id", "Main Gate").equals("Main Gate"))
+            if(!getSharedPreferences(PREFS_NAME, 0).getString("trafficlight_probability", "Main Gate").equals("") && getSharedPreferences(PREFS_NAME, 0).getString("door_id", "Main Gate").equals("Main Gate"))
             {
                 findViewById(R.id.textView_TrafficLight).setVisibility(View.VISIBLE);
                 ((TextView) findViewById(R.id.textView_TrafficLight))

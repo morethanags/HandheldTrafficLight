@@ -3,9 +3,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.huntloc.handheld.MainActivity">
     <item
+        android:id="@+id/trafficlight"
+        android:title="@string/traffic_light_title"
+        android:orderInCategory="1">
+        <menu>
+            <group
+                android:id="@+id/trafficlight_settings"
+                android:checkableBehavior="single" >
+                <item
+                    android:id="@+id/trafficlight_none"
+                    android:title="Desabilitar"/>
+                <item
+                    android:id="@+id/trafficlight_low"
+                    android:title="Baja 20%"/>
+                <item
+                    android:id="@+id/trafficlight_medium"
+                    android:title="Media 50%"/>
+                <item
+                    android:id="@+id/trafficlight_high"
+                    android:title="Alta 80%"/>
+                <!-- <item
+                     android:id="@+id/door_temp"
+                     android:title="Door 1"/>-->
+            </group>
+        </menu>
+    </item>
+    <item
         android:id="@+id/action_door"
         android:title="@string/door_menu_title"
-        android:orderInCategory="4">
+        android:orderInCategory="2">
         <menu>
             <group
                 android:id="@+id/door_settings"
@@ -32,27 +58,5 @@
             </group>
         </menu>
     </item>
-    <item
-        android:id="@+id/trafficlight"
-        android:title="@string/traffic_light_title"
-        android:orderInCategory="5">
-        <menu>
-            <group
-                android:id="@+id/trafficlight_settings"
-                android:checkableBehavior="single" >
-                <item
-                    android:id="@+id/trafficlight_low"
-                    android:title="Baja 20%"/>
-                <item
-                    android:id="@+id/trafficlight_medium"
-                    android:title="Media 50%"/>
-                <item
-                    android:id="@+id/trafficlight_high"
-                    android:title="Alta 80%"/>
-                <!-- <item
-                     android:id="@+id/door_temp"
-                     android:title="Door 1"/>-->
-            </group>
-        </menu>
-    </item>
+
 </menu>

@@ -93,9 +93,13 @@ public class HandheldFragment extends Fragment {
         ((TextView) view.findViewById(R.id.textView_DoorId))
                 .setText(HandheldFragment.this.getActivity().getSharedPreferences(MainActivity.PREFS_NAME, 0).getString(
                         "door_id", "Main Gate"));
-        ((TextView) view.findViewById(R.id.textView_TrafficLight))
-                .setText("Seleccion "+HandheldFragment.this.getActivity().getSharedPreferences(MainActivity.PREFS_NAME, 0).getString(
-                        "trafficlight_probability", "Baja"));
+
+        if(!HandheldFragment.this.getActivity().getSharedPreferences(MainActivity.PREFS_NAME, 0).getString(
+                "trafficlight_probability", "Baja").equals("")){
+            ((TextView) view.findViewById(R.id.textView_TrafficLight))
+                    .setText("Seleccion "+HandheldFragment.this.getActivity().getSharedPreferences(MainActivity.PREFS_NAME, 0).getString(
+                            "trafficlight_probability", "Baja"));
+        }
 
         return view;
     }
@@ -352,7 +356,7 @@ public class HandheldFragment extends Fragment {
                             alertDialogBuilder.create().show();
                         }
                         else {
-                            if (!jsonResponse.isNull("CAMOExpirationDate")) {
+                            /*if (!jsonResponse.isNull("CAMOExpirationDate")) {
                                 Date CAMODate = parseString(jsonResponse.optString("CAMOExpirationDate"));
 
                                 Calendar calendar = Calendar.getInstance();
@@ -380,7 +384,7 @@ public class HandheldFragment extends Fragment {
                                     });
                                     alertDialogBuilder.create().show();
                                 }
-                            }
+                            }*/
                         }
                     }
 

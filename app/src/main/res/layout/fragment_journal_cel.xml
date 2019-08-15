@@ -161,6 +161,7 @@
                 android:layout_gravity="right" />
         </LinearLayout>
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/bandTrafficLightColor"
         android:layout_width="match_parent"

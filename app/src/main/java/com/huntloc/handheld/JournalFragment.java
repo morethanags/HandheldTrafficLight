@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.content.DialogInterface;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,7 +33,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
+import android.app.AlertDialog;
 public class JournalFragment extends Fragment {
 
     public static final String ARG_RESPONSE = "response";
@@ -172,7 +172,37 @@ public class JournalFragment extends Fragment {
             monthAhead.set(Calendar.HOUR_OF_DAY, 0);
 
             SimpleDateFormat newDateFormat = new SimpleDateFormat("d MMMM yyyy");
+            SimpleDateFormat newDateFormat2 = new SimpleDateFormat("d/MM/yyyy");
+            if(!jsonResponse.isNull("CAMOExpirationDate")) {
+                SimpleDateFormat newDateFormat1 = new SimpleDateFormat("d MMMM yyyy");
+                Date CAMODate = parseString(jsonResponse.optString("CAMOExpirationDate"));
 
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(CAMODate);
+                calendar.add(Calendar.DATE, 1);
+                calendar.set(Calendar.HOUR, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+
+                Log.d("CAMO Date", newDateFormat1.format(CAMODate));
+
+                if (calendar.getTime().before(today.getTime())) {
+
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                    alertDialogBuilder.setTitle("Handheld");
+                    alertDialogBuilder.setMessage("Certificado de aptitud médico ocupacional vencido\n" +
+                            newDateFormat1.format(CAMODate));
+                    alertDialogBuilder.setCancelable(false);
+                    alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+                    alertDialogBuilder.create().show();
+                    buttonEntrance.setEnabled(false);
+                }
+            }
             if (!jsonResponse.isNull("DriverLicenseDate")) {
                 Date DriverLicenseDate = parseString(jsonResponse.optString("DriverLicenseDate"));
                 textView_DriverLicenseDate.setText("Licencia de conducir: " + newDateFormat.format(DriverLicenseDate) + " ");
@@ -199,7 +229,6 @@ public class JournalFragment extends Fragment {
                     imageView_DriverLicenseType.setColorFilter(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.warning));
                 }
             }
-
 
             if (!jsonResponse.isNull("DefenseDrivingDate")) {
 
@@ -242,14 +271,25 @@ public class JournalFragment extends Fragment {
             Log.d("Trafficlighty", probability+" "+numero);
 
             if(door.equals("Main Gate")){
-                if((probability.equals("Baja") && numero <= 2) || (probability.equals("Media") && numero <= 5) || (probability.equals("Alta") && numero <= 8)){
-                    textView_TrafficLight_Color.setText("CANAL ROJO");
-                    bandTrafficLightColor.setBackgroundColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.error));
+                if(!probability.equals("")){
+                    textView_TrafficLight_Color.setVisibility(View.VISIBLE);
+                    bandTrafficLightColor.setVisibility(View.VISIBLE);
+                    boolean isWhiteList = !jsonResponse.isNull("IsWhiteList") && jsonResponse.optString("IsWhiteList").equals("1");
+                    Log.d("IsWhiteList", isWhiteList+" ");
+                    if( !isWhiteList &&( (probability.equals("Baja") && numero <= 2) || (probability.equals("Media") && numero <= 5) || (probability.equals("Alta") && numero <= 8))){
+                        textView_TrafficLight_Color.setText("CANAL ROJO");
+                        bandTrafficLightColor.setBackgroundColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.error));
+                    }
+                    else {
+                        textView_TrafficLight_Color.setText("CANAL VERDE");
+                        bandTrafficLightColor.setBackgroundColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.check));
+                    }
                 }
-                else {
-                    textView_TrafficLight_Color.setText("CANAL VERDE");
-                    bandTrafficLightColor.setBackgroundColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.check));
+                else{
+                    textView_TrafficLight_Color.setVisibility(View.GONE);
+                    bandTrafficLightColor.setVisibility(View.GONE);
                 }
+
                 textView_TrafficLight_Color.setVisibility(View.VISIBLE);
                 bandTrafficLightColor.setVisibility(View.VISIBLE);
             }else{
@@ -259,6 +299,7 @@ public class JournalFragment extends Fragment {
 
 
         } catch (Exception ex) {
+
         }
 
         return view;
