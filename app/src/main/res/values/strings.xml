@@ -21,4 +21,8 @@
     <string name="title_activity_groups">GroupsActivity</string>
     <string name="service_url">http://wsprd.perulng.com/ccure9000/rest</string>
     <!--<string name="service_url">http://plngmelas42.plng.pvt/ccure9000/rest</string>-->
+
+    <string name="url_path_form">http://wsdev.perulng.com:8120/COVID/rest/Form/Last/ByBadge/</string>
+    <string name="url_credentials">NetCoreUser:Hunt2020##@</string>
+
 </resources>

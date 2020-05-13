@@ -180,6 +180,7 @@ public class HandheldFragment extends Fragment {
                     result.append(line);
                 }
             } catch (Exception e) {
+                Log.d("QueryBadgeTask", e.getMessage());
                 handheldFragmentWeakReference.get().getActivity()
                         .runOnUiThread(new Runnable() {
                             public void run() {
@@ -267,6 +268,7 @@ public class HandheldFragment extends Fragment {
                     result.append(line);
                 }
             } catch (Exception e) {
+                Log.d("QueryPersonnelTask", e.getMessage());
                 handheldFragmentWeakReference.get().getActivity()
                         .runOnUiThread(new Runnable() {
                             public void run() {
@@ -418,4 +420,6 @@ public class HandheldFragment extends Fragment {
             }
         }
     }
+
+
 }

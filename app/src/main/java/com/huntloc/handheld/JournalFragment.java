@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.DialogInterface;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,7 +34,9 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
 import android.app.AlertDialog;
+
 public class JournalFragment extends Fragment {
 
     public static final String ARG_RESPONSE = "response";
@@ -51,6 +54,7 @@ public class JournalFragment extends Fragment {
     private WeakReference<JournalOperation> journalOperationWeakReference;
     private OnJournalFragmentInteractionListener mListener;
     JournalOperation journalOperation = null;
+
     public JournalFragment() {
         // Required empty public constructor
     }
@@ -173,7 +177,7 @@ public class JournalFragment extends Fragment {
 
             SimpleDateFormat newDateFormat = new SimpleDateFormat("d MMMM yyyy");
             SimpleDateFormat newDateFormat2 = new SimpleDateFormat("d/MM/yyyy");
-            if(!jsonResponse.isNull("CAMOExpirationDate")) {
+            if (!jsonResponse.isNull("CAMOExpirationDate")) {
                 SimpleDateFormat newDateFormat1 = new SimpleDateFormat("d MMMM yyyy");
                 Date CAMODate = parseString(jsonResponse.optString("CAMOExpirationDate"));
 
@@ -259,7 +263,7 @@ public class JournalFragment extends Fragment {
                     byteArray.length);
             portrait.setImageBitmap(bitmap);
             bandTrafficLightColor = (LinearLayout) view.findViewById(R.id.bandTrafficLightColor);
-            textView_TrafficLight_Color = (TextView)view.findViewById(R.id.textView_TrafficLight_Color);
+            textView_TrafficLight_Color = (TextView) view.findViewById(R.id.textView_TrafficLight_Color);
 
             //bandTrafficLightColor.setBackgroundColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.error));
 
@@ -268,38 +272,39 @@ public class JournalFragment extends Fragment {
             String door = JournalFragment.this.getActivity().getSharedPreferences(PREFS_NAME, 0).getString("door_id", "Main Gate");
 
             int numero = (int) (Math.random() * 10) + 1;
-            Log.d("Trafficlighty", probability+" "+numero);
+            Log.d("Trafficlighty", probability + " " + numero);
 
-            if(door.equals("Main Gate")){
-                if(!probability.equals("")){
+            if (door.equals("Main Gate")) {
+                if (!probability.equals("")) {
                     textView_TrafficLight_Color.setVisibility(View.VISIBLE);
                     bandTrafficLightColor.setVisibility(View.VISIBLE);
                     boolean isWhiteList = !jsonResponse.isNull("IsWhiteList") && jsonResponse.optString("IsWhiteList").equals("1");
-                    Log.d("IsWhiteList", isWhiteList+" ");
-                    if( !isWhiteList &&( (probability.equals("Baja") && numero <= 2) || (probability.equals("Media") && numero <= 5) || (probability.equals("Alta") && numero <= 8))){
+                    Log.d("IsWhiteList", isWhiteList + " ");
+                    if (!isWhiteList && ((probability.equals("Baja") && numero <= 2) || (probability.equals("Media") && numero <= 5) || (probability.equals("Alta") && numero <= 8))) {
                         textView_TrafficLight_Color.setText("CANAL ROJO");
                         bandTrafficLightColor.setBackgroundColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.error));
-                    }
-                    else {
+                    } else {
                         textView_TrafficLight_Color.setText("CANAL VERDE");
                         bandTrafficLightColor.setBackgroundColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.check));
                     }
-                }
-                else{
+                } else {
                     textView_TrafficLight_Color.setVisibility(View.GONE);
                     bandTrafficLightColor.setVisibility(View.GONE);
                 }
 
                 textView_TrafficLight_Color.setVisibility(View.VISIBLE);
                 bandTrafficLightColor.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 textView_TrafficLight_Color.setVisibility(View.GONE);
-                        bandTrafficLightColor.setVisibility(View.GONE);
+                bandTrafficLightColor.setVisibility(View.GONE);
             }
+            //buscar informacion del formulario covid
+            new SearchPersonnelFormTask(this)
+                    .execute(getResources().getString(R.string.url_path_form) + jsonResponse.optString("CardID").trim() + "?includeForm=0");
 
 
         } catch (Exception ex) {
-
+            Log.d("Exception1", ex.getMessage());
         }
 
         return view;
@@ -307,7 +312,7 @@ public class JournalFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
-       super.onAttach(context);
+        super.onAttach(context);
         if (context instanceof OnJournalFragmentInteractionListener) {
             mListener = (OnJournalFragmentInteractionListener) context;
         } else {
@@ -332,6 +337,7 @@ public class JournalFragment extends Fragment {
 
         private WeakReference<JournalFragment> journalFragmentWeakReference;
         HttpURLConnection urlConnection;
+
         private JournalOperation(JournalFragment fragment) {
             this.journalFragmentWeakReference = new WeakReference<JournalFragment>(
                     fragment);
@@ -353,8 +359,7 @@ public class JournalFragment extends Fragment {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            }
-            finally {
+            } finally {
                 urlConnection.disconnect();
             }
             return result.toString();
@@ -378,16 +383,156 @@ public class JournalFragment extends Fragment {
                 NavUtils.navigateUpFromSameTask(journalFragmentWeakReference
                         .get().getActivity());
 
-					/*
-					 * Intent intent = new
-					 * Intent(journalSectionFragmentWeakReference
-					 * .get().getActivity(), MainActivity.class);
-					 * journalSectionFragmentWeakReference
-					 * .get().getActivity().startActivity(intent);
-					 */
+                /*
+                 * Intent intent = new
+                 * Intent(journalSectionFragmentWeakReference
+                 * .get().getActivity(), MainActivity.class);
+                 * journalSectionFragmentWeakReference
+                 * .get().getActivity().startActivity(intent);
+                 */
             } catch (JSONException e) {
             }
 
+        }
+
+
+    }
+
+    private class SearchPersonnelFormTask extends AsyncTask<String, String, String> {
+        private WeakReference<JournalFragment> journalFragmentWeakReference;
+        HttpURLConnection urlConnection;
+        TextView textView_COVIDFormStatus, textView_COVIDFormExpiration;
+        ImageView imageView_COVIDFormStatus, imageView_COVIDFormExpiration;
+
+        String formstatusstr, formexpiration;
+        boolean formstatus, formexpired;
+
+        private SearchPersonnelFormTask(JournalFragment fragment) {
+            this.journalFragmentWeakReference = new WeakReference<JournalFragment>(
+                    fragment);
+
+
+        }
+
+        @SuppressWarnings("unchecked")
+        protected String doInBackground(String... args) {
+            StringBuilder result = new StringBuilder();
+            try {
+                URL url = new URL(args[0]);
+                Log.d("url", args[0]);
+
+                final String basicAuth = "Basic " + Base64.encodeToString(getResources().getString(R.string.url_credentials).getBytes(), Base64.NO_WRAP);
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestProperty("Authorization", basicAuth);
+                urlConnection.setRequestMethod("GET");
+
+                int code = urlConnection.getResponseCode();
+                Log.d("code", code+"");
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    result.append(line);
+                }
+            } catch (Exception e) {
+                Log.d("Exception", e.toString());
+            } finally {
+                urlConnection.disconnect();
+            }
+            return result.toString();
+        }
+
+        protected void onPostExecute(String result) {
+
+            try {
+                if (result != null && !result.equals("") && !new JSONObject(result).isNull("personForm")) {
+                    JSONObject jsonObject = new JSONObject(result);
+                    JSONObject personForm = jsonObject.getJSONObject("personForm");
+
+                    formstatusstr = personForm.optString("statusStr");
+                    formexpiration = personForm.optString("expirationDate");
+
+                    formstatus = personForm.optBoolean("status");
+                    Log.d("status",formstatus+"");
+                    formexpired = personForm.optBoolean("expired");
+                    Log.d("expired",formexpired+"");
+            /*formStatusEditText.setText(formstatus);
+
+
+            formExpirationEditText.setText(formexpiration);
+            if () {
+                formExpirationEditText.setError("");
+            } else {
+                formExpirationEditText.setError(null);
+            }*/
+                    journalFragmentWeakReference.get().getActivity()
+                            .runOnUiThread(new Runnable() {
+                                public void run() {
+                                    textView_COVIDFormStatus = (TextView) journalFragmentWeakReference.get().getView()
+                                            .findViewById(R.id.textView_COVIDFormStatus);
+                                    textView_COVIDFormExpiration = (TextView) journalFragmentWeakReference.get().getView()
+                                            .findViewById(R.id.textView_COVIDFormExpiration);
+
+                                    imageView_COVIDFormStatus = (ImageView) journalFragmentWeakReference.get().getView()
+                                            .findViewById(R.id.imageView_COVIDFormStatus);
+                                    imageView_COVIDFormExpiration = (ImageView) journalFragmentWeakReference.get().getView()
+                                            .findViewById(R.id.imageView_COVIDFormExpiration);
+                                    textView_COVIDFormStatus.setText("COVID-19 Form: " + formstatusstr);
+                                    textView_COVIDFormExpiration.setText("Expiration Date: " + formexpiration);
+                                    if (formstatus) {
+                                        imageView_COVIDFormStatus.setImageResource(R.drawable.ic_verified);
+                                        imageView_COVIDFormStatus.setColorFilter(
+                                                ContextCompat.getColor(journalFragmentWeakReference.get().getActivity().getApplicationContext(), R.color.check));
+
+                                    } else {
+                                        imageView_COVIDFormStatus.setImageResource(R.drawable.ic_report);
+                                        imageView_COVIDFormStatus.setColorFilter(
+                                                ContextCompat.getColor(journalFragmentWeakReference.get().getActivity().getApplicationContext(), R.color.error));
+
+                                    }
+                                    if (formexpired) {
+                                        imageView_COVIDFormExpiration.setImageResource(R.drawable.ic_report);
+                                        imageView_COVIDFormExpiration.setColorFilter(
+                                                ContextCompat.getColor(journalFragmentWeakReference.get().getActivity().getApplicationContext(), R.color.error));
+
+                                    } else {
+                                        imageView_COVIDFormExpiration.setImageResource(R.drawable.ic_verified);
+                                        imageView_COVIDFormExpiration.setColorFilter(
+                                                ContextCompat.getColor(journalFragmentWeakReference.get().getActivity().getApplicationContext(), R.color.check));
+
+
+                                    }
+                                }
+                            });
+                } else {
+                    journalFragmentWeakReference.get().getActivity()
+                            .runOnUiThread(new Runnable() {
+                                public void run() {
+                                    textView_COVIDFormStatus = (TextView) journalFragmentWeakReference.get().getView()
+                                            .findViewById(R.id.textView_COVIDFormStatus);
+                                    textView_COVIDFormExpiration = (TextView) journalFragmentWeakReference.get().getView()
+                                            .findViewById(R.id.textView_COVIDFormExpiration);
+
+                                    imageView_COVIDFormStatus = (ImageView) journalFragmentWeakReference.get().getView()
+                                            .findViewById(R.id.imageView_COVIDFormStatus);
+                                    imageView_COVIDFormExpiration = (ImageView) journalFragmentWeakReference.get().getView()
+                                            .findViewById(R.id.imageView_COVIDFormExpiration);
+                                    textView_COVIDFormStatus.setText("COVID-19 Form: No Information");
+                                    textView_COVIDFormExpiration.setText("Expiration Date: No Information");
+                                    imageView_COVIDFormStatus.setImageResource(R.drawable.ic_report);
+                                    imageView_COVIDFormStatus.setColorFilter(
+                                            ContextCompat.getColor(journalFragmentWeakReference.get().getActivity().getApplicationContext(), R.color.error));
+                                    imageView_COVIDFormExpiration.setImageResource(R.drawable.ic_report);
+                                    imageView_COVIDFormExpiration.setColorFilter(
+                                            ContextCompat.getColor(journalFragmentWeakReference.get().getActivity().getApplicationContext(), R.color.error));
+
+                                }
+                            });
+                }
+            } catch (Exception ex) {
+                Log.d("Exception", ex.getMessage());
+            }
         }
     }
 }
