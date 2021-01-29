@@ -62,8 +62,8 @@ public class MainActivity extends AppCompatActivity implements
         tabLayout.setupWithViewPager(mViewPager);
 
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if (mNfcAdapter == null) {
-            Toast.makeText(this, "This device doesn't support NFC.",
+         if (mNfcAdapter == null) {
+           Toast.makeText(this, "This device doesn't support NFC.",
                     Toast.LENGTH_LONG).show();
             finish();
             return;
@@ -154,10 +154,12 @@ public class MainActivity extends AppCompatActivity implements
        /*filters[0].addAction(NfcAdapter.ACTION_TECH_DISCOVERED);
         techList = new String[][]{new String[]{NfcA.class.getName()}, new String[]{MifareClassic.class.getName()}, new String[]{NdefFormatable.class.getName()}};*/
 
+        //revertir
         adapter.enableForegroundDispatch(activity, pendingIntent, filters, techList);
     }
 
     public void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
+        //revertir
         adapter.disableForegroundDispatch(activity);
     }
 

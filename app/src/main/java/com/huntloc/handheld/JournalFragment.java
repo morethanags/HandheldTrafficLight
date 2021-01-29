@@ -43,9 +43,11 @@ public class JournalFragment extends Fragment {
     public static final String PREFS_NAME = "HandheldPrefsFile";
 
     TextView textView_Credential, textView_Name;
-    TextView textView_DriverLicenseDate, textView_DriverLicenseType, textView_DefenseDrivingDate;
+    TextView textView_DriverLicenseDate, textView_DriverLicenseType, textView_DefenseDrivingDate
+            ,textView_TrabajosEnAltura;
     ImageView portrait;
-    ImageView imageView_DriverLicenseDate, imageView_DriverLicenseType, imageView_DefenseDrivingDate;
+    ImageView imageView_DriverLicenseDate, imageView_DriverLicenseType, imageView_DefenseDrivingDate
+            ,imageView_TrabajosEnAlturaDate;
     String credentialId;
     Button buttonEntrance, buttonExit;
     LinearLayout bandTrafficLightColor;
@@ -109,12 +111,19 @@ public class JournalFragment extends Fragment {
                 .findViewById(R.id.textView_DriverLicenseType);
         textView_DefenseDrivingDate = (TextView) view
                 .findViewById(R.id.textView_DefenseDrivingDate);
+
+        textView_TrabajosEnAltura = (TextView) view
+                .findViewById(R.id.textView_TrabajosEnAlturaDate);
+
         imageView_DriverLicenseDate = (ImageView) view
                 .findViewById(R.id.imageView_DriverLicenseDate);
         imageView_DriverLicenseType = (ImageView) view
                 .findViewById(R.id.imageView_DriverLicenseType);
         imageView_DefenseDrivingDate = (ImageView) view
                 .findViewById(R.id.imageView_DefenseDrivingDate);
+        imageView_TrabajosEnAlturaDate = (ImageView) view
+                .findViewById(R.id.imageView_TrabajosEnAlturaDate);
+
         portrait = (ImageView) view
                 .findViewById(R.id.imageView_Portrait);
         journalOperation = new JournalOperation(this);
@@ -253,6 +262,28 @@ public class JournalFragment extends Fragment {
                     } else {
                         imageView_DefenseDrivingDate.setImageResource(R.drawable.ic_verified);
                         imageView_DefenseDrivingDate.setColorFilter(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.check));
+                    }
+                }
+            }
+            if (!jsonResponse.isNull("TrabajosEnAltura")) {
+
+                Date TrabajosEnAlturaDate = parseString(jsonResponse.optString("TrabajosEnAltura"));
+                textView_TrabajosEnAltura.setText("Trabajos en Altura: " + newDateFormat.format(TrabajosEnAlturaDate) + " ");
+
+                Calendar TrabajosEnAlturaCalendar = Calendar.getInstance();
+                TrabajosEnAlturaCalendar.setTime(TrabajosEnAlturaDate);
+                TrabajosEnAlturaCalendar.add(Calendar.DATE, 1);
+
+                if (TrabajosEnAlturaCalendar.getTime().before(Calendar.getInstance().getTime())) {
+                    imageView_TrabajosEnAlturaDate.setImageResource(R.drawable.ic_report);
+                    imageView_TrabajosEnAlturaDate.setColorFilter(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.error));
+                } else {
+                    if (TrabajosEnAlturaCalendar.getTime().before(monthAhead.getTime())) {// a un mes
+                        imageView_TrabajosEnAlturaDate.setImageResource(R.drawable.ic_warning);
+                        imageView_TrabajosEnAlturaDate.setColorFilter(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.warning));
+                    } else {
+                        imageView_TrabajosEnAlturaDate.setImageResource(R.drawable.ic_verified);
+                        imageView_TrabajosEnAlturaDate.setColorFilter(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.check));
                     }
                 }
             }
